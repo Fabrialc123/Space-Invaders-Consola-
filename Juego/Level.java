@@ -1,93 +1,76 @@
 package Juego;
 
 
-
 public enum Level {
-		EASY, HARD, INSANE;
+ 
+	EASY(4, 2, 0.2, 3, 0.5, 1), 
+	HARD(8, 4, 0.3, 2, 0.2, 2),
+	INSANE(12, 4, 0.5, 1, 0.1, 3);
+
+	private int numRegularAliens;
+	private int numDestroyerAliens;
+	private int numCyclesToMoveOneCell;
+	private double ovniFrequency;
+	private double shootFrequency;
+	private int numRowsOfRegularAliens;
+	private double turnExplodeFrequency = 0.05; // actualmente no depende del nivel
+
+	private Level(
+			int numRegularAliens, 
+			int numDestroyerAliens, 
+			double shootFrequency, 
+			int numCyclesToMoveOneCell, 
+			double ovniFrequency, 
+			int numRowsOfRegularAliens)
+	{
+		this.numRegularAliens = numRegularAliens;
+		this.numDestroyerAliens = numDestroyerAliens;
+		this.shootFrequency = shootFrequency;
+		this.numCyclesToMoveOneCell = numCyclesToMoveOneCell;
+		this.ovniFrequency = ovniFrequency;
+		this.numRowsOfRegularAliens = numRowsOfRegularAliens;
+	}
 	
 
-	public double getFrecOvni() {
-		double frecuenciaOvni = 0;
-		if (this== EASY) {
-			frecuenciaOvni = 0.5;
-		} else if (this == HARD) {
-			frecuenciaOvni = 0.3;
-		}else if ( this == INSANE) {
-			frecuenciaOvni = 0.1;
-		}
-		return frecuenciaOvni;
-	}
-
-	public int getFrecMovimiento() {
-		int frecuenciaMovimiento = 0;
-		if (this == EASY) {
-			frecuenciaMovimiento = 3;
-		} else if (this == HARD) {
-			frecuenciaMovimiento = 2;
-		}else if ( this == INSANE) {
-			frecuenciaMovimiento = 1;
-		}
-		return frecuenciaMovimiento;
-	}
-
-	public int getNumRegulares() {
-		int numeroNavesRegulares = 0;
-		if (this == EASY) {
-			numeroNavesRegulares = 4;
-		} else if (this == HARD) {
-			numeroNavesRegulares = 8;
-		}else if ( this == INSANE) {
-			numeroNavesRegulares = 8;
-		}
-		return numeroNavesRegulares;
-	}
-
-	public int getFilaInicialRegulares() {
-		int filaInicialRegulares = 0;
-		if (this== EASY) {
-			filaInicialRegulares = 1;
-		} else if (this == HARD) {
-			filaInicialRegulares = 1;
-		}else if ( this == INSANE) {
-			filaInicialRegulares = 1;
-		}
-		return filaInicialRegulares;
+	public int getNumRegularAliens() {
+		return numRegularAliens;
 	}
 	
-	public int getNumDestructores() {
-		int numeroNavesDestructores = 0;
-		if (this== EASY) {
-			numeroNavesDestructores = 2;
-		} else if (this == HARD) {
-			numeroNavesDestructores = 2;
-		}else if ( this == INSANE) {
-			numeroNavesDestructores = 4;
-		}
-		return numeroNavesDestructores;
+	public int getNumDestroyerAliens() {
+		return numDestroyerAliens;
 	}
 
-	public int getFilaInicialDestructores() {
-		int filaInicialDestructores = 0;
-		if (this== EASY) {
-			filaInicialDestructores = 2;
-		} else if (this == HARD) {
-			filaInicialDestructores = 3;
-		}else if ( this == INSANE) {
-			filaInicialDestructores = 3;
-		}
-		return filaInicialDestructores;
+	public double getShootFrequency() {
+		return shootFrequency;
+	}
+	
+	public int getNumCyclesToMoveOneCell() {
+		return numCyclesToMoveOneCell;
 	}
 
-	public double getFrecDisparo() {
-		double frecuenciaDisparo = 0;
-		if (this== EASY) {
-			frecuenciaDisparo = 0.1;
-		} else if (this == HARD) {
-			frecuenciaDisparo = 0.3;
-		}else if ( this == INSANE) {
-			frecuenciaDisparo = 0.5;
-		}
-		return frecuenciaDisparo;
+	public double getOvniFrequency() { 
+		return ovniFrequency;
 	}
-	 
+	public int getNumRowsOfRegularAliens() {
+		return numRowsOfRegularAliens;
+	}
+	
+	public int getNumRegularAliensPerRow() {
+		return numRegularAliens / numRowsOfRegularAliens;
+	}
+	
+	public int  getNumDestroyerAliensPerRow() {
+		return getNumDestroyerAliens(); 
+	}
+	
+	public static Level parse(String cadenaEntrada) {
+		for (Level level : Level.values())
+			if (level.name().equalsIgnoreCase(cadenaEntrada))
+				return level;
+	    return EASY;
+	}
+
+	public double getTurnExplodeFrequency(){
+		return turnExplodeFrequency;
+	}
 }

@@ -1,85 +1,57 @@
 package Personajes;
 
+import Juego.Game;
+import Utilidades.IExecuteRandomActions;
 
-public class DestroyerShip {
-	private int fila;
-	private int columna;
-	private int resistencia;
-	private int puntos;
+public class DestroyerShip extends AlienShip {
+
 	private Bomba bomba;
 	
-	public DestroyerShip(int fila,int columna) {
-		this.fila = fila;
-		this.columna = columna;
-		this.resistencia = 1;
-		this.puntos = 10;
-		}
-	
-	
-	public void mover(String direccion) {
-		if(direccion.equals("left")) {
-			this.columna--;
-		}
-		else if (direccion.equals("right")) {
-			this.columna++;
-		}else {
-			this.fila++;
-		}
+	public DestroyerShip(Game game,int fila,int columna,int vida,int puntos) {
+		super(game,fila,columna,vida,puntos);
 	}
+	
 	
 	public String toString() {
-		return "D[" + resistencia + "]"; 
+		return "D[" + this.live + "]"; 
 	}
-	public int getFil() {
-		return this.fila;
-	}
-	public int getCol() {
-		return this.columna;
-	}
-	
-	public void atacar(int dmg) {
-		this.resistencia -= dmg;
+
+
+
+	@Override
+	public void computerAction() {
+		if (puedeLanzarBomba()) {
+			if (IExecuteRandomActions.canGenerateRandomBomb(game)) {
+				LanzaBomba();
+			}
+		}
 		
 	}
-	public int getResistencia() {
-		return this.resistencia;
-	}
 	
-	public int getPuntos() {
-		return this.puntos;
+	private void LanzaBomba() {
+		bomba = new Bomba (game, this.fil, this.col, 1, 1, this);
+		game.addObject(bomba);
 	}
 
 
-	public boolean soltarBomba() {
-		boolean bombaSoltada = false;
-		if (this.bomba == null) {
-			this.bomba = new Bomba(this.fila, this.columna);
-			bombaSoltada = true;
-		}
-		return bombaSoltada;
+	private boolean puedeLanzarBomba(){
+		return this.bomba == null;
 	}
-	
-	public Bomba getBomba() {
-		return this.bomba;
-	}
-	
-	public void quitarBomba() {
+
+
+	public void eliminarBomba() {
 		this.bomba = null;
 	}
 
 
-	public int getFilBomba() {
-		return this.bomba.getFila();
-	}
-	
-	public int getColBomba() {
-		return this.bomba.getColumna();
+	@Override
+	public String serialize() {
+		int ciclospormover = game.getCycle() % game.getLevel().getNumCyclesToMoveOneCell();	
+		String mibomba = "";
+		if (!puedeLanzarBomba()) mibomba =  "      " + this.bomba.serializedelanzador();
+		return "D;" + this.col + "," + this.fil + ";" + this.live + ";" + ciclospormover + ";" + movimiento + mibomba + "\n" ;
 	}
 
-
-	public boolean tieneBomba() {
-		return (this.bomba != null);
-	}
 
 
 

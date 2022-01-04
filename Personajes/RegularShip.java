@@ -1,54 +1,35 @@
 package Personajes;
 
-public class RegularShip {
-	private int fila;
-	private int columna;
-	private int resistencia;
-	private int puntos;
-	
-	public RegularShip(int fila,int columna) {
-		this.fila = fila;
-		this.columna = columna;
-		this.resistencia = 2;
-		this.puntos = 5;
-	}
+import Juego.Game;
+import Utilidades.IExecuteRandomActions;
+
+public class RegularShip extends AlienShip {
 	
 	
-	public void mover(String direccion) {
-		if(direccion.equals("left")) {
-			this.columna--;
-		}
-		else if (direccion.equals("right")) {
-			this.columna++;
-		} else this.fila++;
-	}
-	
-	public int getFil() {
-		return this.fila;
-	}
-	
-	public int getCol() {
-		return this.columna;
-	}
-	
-	public boolean CompararCoordenadas(int fil,int col) {
-		return (this.fila == fil && this.columna == col );
+	public RegularShip(Game game,int fila,int columna,int vida,int puntos) {
+		super(game,fila,columna,vida,puntos);
 	}
 	
 	public String toString() {
-		return "R[" + resistencia + "]";
+		return "R"+ "[" + this.live + "]";
 	}
-	public void atacar(int dmg) {
-		this.resistencia -= dmg;
-		
-	}
-	public int getResistencia() {
-		return this.resistencia;
-	}
-	
-	public int getPuntos() {
-		return this.puntos;
-	}
-	
 
-}
+
+	@Override
+	public void computerAction() {
+		if (IExecuteRandomActions.canTurnExplosive(game)) {
+			game.addObject(new ExplosiveShip (game,this.fil,this.col,this.live,this.puntos, super.isAlgunaEnElBorde(),super.isAlgunaHaAterrizado()));
+			this.live = -1;
+			this.puntos = 0;
+		}
+	}
+
+	@Override
+	public String serialize() {
+		int ciclospormover = game.getCycle() % game.getLevel().getNumCyclesToMoveOneCell();	
+		return "R"+";" + this.col + "," + this.fil + ";" + this.live + ";" + ciclospormover + ";" + movimiento + "\n";
+	}
+
+
+} 
+
